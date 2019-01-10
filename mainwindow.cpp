@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    Auto = 0;
     this->setWindowTitle(QString("MHW Save ID Changer v1.0"));
     this->setAutoFillBackground(true);//开启背景设置
     //this->setPalette(QPalette(QColor(255,255,255)));
@@ -61,14 +60,20 @@ void MainWindow::on_pushButton_clicked()
     if(step==0)
     {
 
-
         QMessageBox mesg;
         mesg.warning(this,"注意","只支持STEAM之间更换存档！   ");
 
         QString file_full;
         QFileInfo fi;//文件路径
-        file_full = QFileDialog::getOpenFileName(this, tr("选择自己的存档"),
-                    "./", tr("存档文件 (SAVEDATA1000) (SAVEDATA1000);;所有文件 (*.*)"));
+        if(ui->checkBox->isChecked()==true){ //ui->checkBox->isChecked()==true 判断是否是开启“自动替换存档”功能
+            file_full = QFileDialog::getOpenFileName(this, tr("选择自己的存档"),
+                        "./", tr("存档文件 (SAVEDATA1000) (SAVEDATA1000)"));
+        }
+        else{
+            file_full = QFileDialog::getOpenFileName(this, tr("选择自己的存档"),
+                        "./", tr("存档文件 (SAVEDATA1000) (SAVEDATA1000);;所有文件 (*.*)"));
+        }
+
         QTextCodec *code = QTextCodec::codecForName("GB2312");//解决中文路径问题
         std::string str = code->fromUnicode(file_full).data();
 
@@ -103,13 +108,8 @@ void MainWindow::on_pushButton_clicked()
         }
 
 
-
-        if(ui->checkBox->isChecked()==true) //开启“自动替换存档”选项后
-        {
-              Auto = 1;
-        }
-        if(Auto==1){
-            ui->lineEdit->setText(file_full);
+        if(ui->checkBox->isChecked()==true){
+            //ui->lineEdit->setText(file_full);
 
             bool rx = file_full.contains("582010"); //成功返回true  第二个参数表示是否大小写敏感
             if(rx != true){
@@ -125,9 +125,26 @@ void MainWindow::on_pushButton_clicked()
                 return;
             }
         }
+        bool ok;
+        if(ui->checkBox->isChecked()==true){
+            QString path1 = file_full;
+            QString path2 = QString("%1_backup").arg(file_full);
+            QFileInfo file(path2); //判断是否已经有备份
+            for(int i=1;;i++){
+                path2 = QString("%1_backup%2").arg(file_full).arg(i);
+                //mesg.about(this,"提示",path2);
+                //return;
+                QFileInfo file(path2); //判断是否已经有备份
+                if(file.exists()==false)
+                {
+                    break;
+                }
 
+            }
+            ok = QFile::copy(path1,path2);
+        }
 
-        ui->checkBox->setEnabled(false); //再禁止调整 “自动替换存档”选项
+        ui->checkBox->setEnabled(false); //禁止调整 “自动替换存档”选项
 
 
 
@@ -142,34 +159,24 @@ void MainWindow::on_pushButton_clicked()
         sprintf(buffer, "%02X %02X %02X %02X %02X %02X %02X %02X", text[0]&0xff,text[1]&0xff, text[2]&0xff,text[3]&0xff, text[4]&0xff, text[5]&0xff, text[6]&0xff, text[7]&0xff);
         strr = QString("%1").arg(buffer);
         ui->lineEdit->setText(strr);
-        if(Auto==1){
-            QString path1 = file_full;
-            QString path2 = QString("%1_backup").arg(file_full);
-            QFileInfo file(path2); //判断是否已经有备份
-            for(int i=1;;i++){
-                path2 = QString("%1_backup%2").arg(file_full).arg(i);
-                //mesg.about(this,"提示",path2);
-                //return;
-                QFileInfo file(path2); //判断是否已经有备份
-                if(file.exists()==false)
-                {
-                    break;
-                }
-            }
 
-            bool ok = QFile::rename(path1,path2);
-            if(ok == true){
+
+
+
+
+            if(ok == true && ui->checkBox->isChecked()==true){
                 mesg.about(this,"提示","提取并备份成功！   ");
                 ui->label->setText("已备份自己的存档，已提取自己存档的ID\n\n请点击按钮进行下一步");
             }
-            else mesg.critical(this,"错误","备份失败！\n请检查游戏是否关闭，是否有其他程序占用存档文件   \n本程序即将关闭   \n");
-            this->close();
+            else if(ok != true && ui->checkBox->isChecked()==true){
+                mesg.critical(this,"错误","备份失败！\n请检查游戏是否关闭，是否有其他程序占用存档文件   \n");
+            return;
 
         }
-        else{
-            mesg.about(this,"提示","提取成功！   ");
-            ui->label->setText("已提取自己存档的ID\n\n请点击按钮进行下一步");
-        }
+            else{
+                mesg.about(this,"提示","提取成功！   ");
+                ui->label->setText("已提取自己存档的ID\n\n请点击按钮进行下一步");
+            }
 
 
 
