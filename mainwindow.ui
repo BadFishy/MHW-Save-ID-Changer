@@ -81,6 +81,9 @@ by.坏鱼炒年糕
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -91,6 +94,12 @@ by.坏鱼炒年糕
     </property>
     <property name="text">
      <string>自动替换存档</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>

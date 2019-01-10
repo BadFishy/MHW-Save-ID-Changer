@@ -1,18 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
+#include <QFile>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <QMessageBox>
 #include <QTextCodec>
+#include <QString>
+#include <QFileInfo>
 
 char step=0;
 char text[9];
 char text2[9];
 char text3[9];
 char jiaoyan[2];
-bool Auto = 0;
+bool Auto;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,9 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-
-
-
+    Auto = 0;
     this->setWindowTitle(QString("MHW Save ID Changer v1.0"));
     this->setAutoFillBackground(true);//开启背景设置
     //this->setPalette(QPalette(QColor(255,255,255)));
@@ -59,6 +60,8 @@ void MainWindow::on_pushButton_clicked()
 
     if(step==0)
     {
+
+
         QMessageBox mesg;
         mesg.warning(this,"注意","只支持STEAM之间更换存档！   ");
 
@@ -99,9 +102,34 @@ void MainWindow::on_pushButton_clicked()
             return;
         }
 
-        if(Auto==1){
-            //aaaaaaaaaa
+
+
+        if(ui->checkBox->isChecked()==true) //开启“自动替换存档”选项后
+        {
+              Auto = 1;
         }
+        if(Auto==1){
+            ui->lineEdit->setText(file_full);
+
+            bool rx = file_full.contains("582010"); //成功返回true  第二个参数表示是否大小写敏感
+            if(rx != true){
+                QMessageBox mesg;
+                mesg.critical(this,"错误","选择的目录不是游戏存档目录！   ");
+                QMessageBox mesg1;
+                mesg1.about(this,"重要提示","\n开启“自动替换存档”选项后   \n选择“自己的存档”时请直接选择游戏存档目录的存档   \n"
+                                    "游戏存档路径在   \n“Steam安装目录\\userdata\\{你的账号识别码}\\582010\\remote”    \n\n"
+                                       "程序将自动把你“自己的存档”替换成“别人的存档”   \n"
+                                     "即处理完成后直接进游戏就是别人的存档了   \n程序也会同时在该目录下备份您之前的存档   \n");
+                QMessageBox mesg2;
+                mesg1.about(this,"重要提示","\n请重新选择存档目录   \n或者关闭“自动替换存档”，改签后自行替换存档   \n");
+                return;
+            }
+        }
+
+
+        ui->checkBox->setEnabled(false); //再禁止调整 “自动替换存档”选项
+
+
 
         memset(text,0x00,sizeof(text));
         fseek(fp1,40,SEEK_SET);
@@ -114,9 +142,37 @@ void MainWindow::on_pushButton_clicked()
         sprintf(buffer, "%02X %02X %02X %02X %02X %02X %02X %02X", text[0]&0xff,text[1]&0xff, text[2]&0xff,text[3]&0xff, text[4]&0xff, text[5]&0xff, text[6]&0xff, text[7]&0xff);
         strr = QString("%1").arg(buffer);
         ui->lineEdit->setText(strr);
+        if(Auto==1){
+            QString path1 = file_full;
+            QString path2 = QString("%1_backup").arg(file_full);
+            QFileInfo file(path2); //判断是否已经有备份
+            for(int i=1;;i++){
+                path2 = QString("%1_backup%2").arg(file_full).arg(i);
+                //mesg.about(this,"提示",path2);
+                //return;
+                QFileInfo file(path2); //判断是否已经有备份
+                if(file.exists()==false)
+                {
+                    break;
+                }
+            }
 
-        mesg.about(this,"提示","提取成功！   ");
-        ui->label->setText("已提取自己存档的ID\n\n请点击按钮进行下一步");
+            bool ok = QFile::rename(path1,path2);
+            if(ok == true){
+                mesg.about(this,"提示","提取并备份成功！   ");
+                ui->label->setText("已备份自己的存档，已提取自己存档的ID\n\n请点击按钮进行下一步");
+            }
+            else mesg.critical(this,"错误","备份失败！\n请检查游戏是否关闭，是否有其他程序占用存档文件   \n本程序即将关闭   \n");
+            this->close();
+
+        }
+        else{
+            mesg.about(this,"提示","提取成功！   ");
+            ui->label->setText("已提取自己存档的ID\n\n请点击按钮进行下一步");
+        }
+
+
+
         ui->pushButton->setText("2.选择“别人的存档”");
         step++;
         return;
@@ -202,6 +258,7 @@ void MainWindow::on_pushButton_clicked()
         mesg.about(this,"提示","处理成功！   ");
         ui->label->setText("存档ID改签成功！\n\n现在您可以把别人的存档覆盖到您的存档目录了\n\n记得备份自己的存档哦~");
         ui->pushButton->setText("关闭");
+
         step++;
         return;
 
@@ -227,14 +284,13 @@ void MainWindow::on_checkBox_stateChanged(int arg1)
 {
     if(arg1 != 0){
         QMessageBox mesg;
-        mesg.about(this,"重要提示","开启这个选项后   \n选择“自己的存档”时请直接选择游戏存档目录的存档   \n"
-                            "游戏存档路径在   \n“你Steam的安装目录\\userdata\\ {你的STEAM识别码} \\582010\\remote”    \n\n"
+        mesg.about(this,"重要提示","\n开启这个选项后   \n选择“自己的存档”时请直接选择游戏存档目录的存档   \n"
+                            "游戏存档路径在   \n“Steam安装目录\\userdata\\{你的账号识别码}\\582010\\remote”    \n\n"
                                "程序将自动把你“自己的存档”替换成“别人的存档”   \n"
                              "即处理完成后直接进游戏就是别人的存档了   \n程序也会同时在该目录下备份您之前的存档   \n");
-        Auto = 1;
-        return;
+
     }
-    Auto = 0;
+
     return;
 
 }
