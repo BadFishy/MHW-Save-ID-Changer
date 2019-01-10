@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    this->setWindowTitle(QString("MHW Save ID Changer v0.6"));
+    this->setWindowTitle(QString("MHW Save ID Changer v1.0"));
     this->setAutoFillBackground(true);//开启背景设置
     //this->setPalette(QPalette(QColor(255,255,255)));
     ui->label->setStyleSheet("background-color: rgb(255,255,255)");
@@ -211,5 +211,20 @@ void MainWindow::on_pushButton_clicked()
     //保存文件        获取文件路径  “Save File” 对话框名        “*.txt” 默认文件名
     //fi= QFileInfo(file_full);
 
+
+}
+
+
+
+
+void MainWindow::on_checkBox_stateChanged(int arg1)
+{
+    if(arg1 != 0){
+        QMessageBox mesg;
+        mesg.about(this,"重要提示","开启这个选项后   \n选择“自己的存档”时请直接选择游戏存档目录的存档   \n"
+                            "游戏存档路径在   \n“你Steam的安装目录\\userdata\\ {你的STEAM识别码} \\582010\\remote”    \n"
+                               "程序将自动把你“自己的存档”替换成“别人的存档”   \n"
+                             "即处理完成后直接进游戏就是别人的存档了   \n程序也会同时在该目录下备份您之前的存档");
+    }
 
 }
