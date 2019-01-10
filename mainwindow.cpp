@@ -16,6 +16,7 @@ char text2[9];
 char text3[9];
 char jiaoyan[2];
 bool Auto;
+QString path;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -126,8 +127,9 @@ void MainWindow::on_pushButton_clicked()
             }
         }
         bool ok;
+        QString path1;
         if(ui->checkBox->isChecked()==true){
-            QString path1 = file_full;
+            path1 = file_full;
             QString path2 = QString("%1_backup").arg(file_full);
             QFileInfo file(path2); //判断是否已经有备份
             for(int i=1;;i++){
@@ -182,8 +184,10 @@ void MainWindow::on_pushButton_clicked()
 
         ui->pushButton->setText("2.选择“别人的存档”");
         step++;
+        path = path1;
         return;
     }
+
 
     if(step==1)
     {
@@ -263,7 +267,23 @@ void MainWindow::on_pushButton_clicked()
         }
         QMessageBox mesg;
         mesg.about(this,"提示","处理成功！   ");
-        ui->label->setText("存档ID改签成功！\n\n现在您可以把别人的存档覆盖到您的存档目录了\n\n记得备份自己的存档哦~");
+        if(ui->checkBox->isChecked()==true){
+            QFile file(path);
+            if (file.exists())
+            {
+                file.remove(); //删除原来的存档
+            }
+            bool ok = QFile::copy(file_full,path);
+            if(ok == true){
+                ui->label->setText("存档替换成功！\n\n现在您可以进入游戏体验全新的世界了\n\n自己的此前的存档已经备份在之前相同的目录哦~");
+            }
+            else {
+               mesg.critical(this,"错误","存档替换失败！\n原因未知。   ");
+               return;
+            }
+
+        }
+        else ui->label->setText("存档ID改签成功！\n\n现在您可以把别人的存档覆盖到您的存档目录了\n\n记得备份自己的存档哦~");
         ui->pushButton->setText("关闭");
 
         step++;
