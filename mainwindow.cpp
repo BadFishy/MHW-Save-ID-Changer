@@ -12,6 +12,7 @@ char text[9];
 char text2[9];
 char text3[9];
 char jiaoyan[2];
+bool Auto = 0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -97,6 +98,11 @@ void MainWindow::on_pushButton_clicked()
             fclose(fp1);
             return;
         }
+
+        if(Auto==1){
+            //aaaaaaaaaa
+        }
+
         memset(text,0x00,sizeof(text));
         fseek(fp1,40,SEEK_SET);
 
@@ -222,9 +228,13 @@ void MainWindow::on_checkBox_stateChanged(int arg1)
     if(arg1 != 0){
         QMessageBox mesg;
         mesg.about(this,"重要提示","开启这个选项后   \n选择“自己的存档”时请直接选择游戏存档目录的存档   \n"
-                            "游戏存档路径在   \n“你Steam的安装目录\\userdata\\ {你的STEAM识别码} \\582010\\remote”    \n"
+                            "游戏存档路径在   \n“你Steam的安装目录\\userdata\\ {你的STEAM识别码} \\582010\\remote”    \n\n"
                                "程序将自动把你“自己的存档”替换成“别人的存档”   \n"
-                             "即处理完成后直接进游戏就是别人的存档了   \n程序也会同时在该目录下备份您之前的存档");
+                             "即处理完成后直接进游戏就是别人的存档了   \n程序也会同时在该目录下备份您之前的存档   \n");
+        Auto = 1;
+        return;
     }
+    Auto = 0;
+    return;
 
 }
