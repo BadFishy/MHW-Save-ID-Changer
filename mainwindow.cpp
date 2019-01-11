@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "C:\Git\MHW\MHW_Save_ID_Changer\ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QFile>
 #include <stdio.h>
