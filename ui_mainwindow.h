@@ -77,13 +77,13 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
         actionreadme->setText(QApplication::translate("MainWindow", "readme", nullptr));
         pushButton->setText(QApplication::translate("MainWindow", "1.\351\200\211\346\213\251\342\200\234\350\207\252\345\267\261\347\232\204\345\255\230\346\241\243\342\200\235", nullptr));
-        label->setText(QApplication::translate("MainWindow", "MHW \345\255\230\346\241\243\346\224\271\347\255\276\345\267\245\345\205\267 v1.1\n"
+        label->setText(QApplication::translate("MainWindow", "MHW \345\255\230\346\241\243\346\224\271\347\255\276\345\267\245\345\205\267 v1.0\n"
 "\n"
 "\347\224\250\344\272\216STEAM\344\270\215\345\220\214\350\264\246\345\217\267\344\271\213\351\227\264\347\232\204\345\255\230\346\241\243\346\233\277\346\215\242\n"
 "\n"
 "by.\345\235\217\351\261\274\347\202\222\345\271\264\347\263\225\n"
 "\n"
-"2019.01.11", nullptr));
+"2019.01.10", nullptr));
         lineEdit->setText(QApplication::translate("MainWindow", "\344\275\240\342\200\234\350\207\252\345\267\261\347\232\204\345\255\230\346\241\243\342\200\235\347\232\204ID\345\260\206\346\230\276\347\244\272\345\234\250\350\277\231\351\207\214", nullptr));
         checkBox->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\346\233\277\346\215\242\345\255\230\346\241\243", nullptr));
     } // retranslateUi
