@@ -49,13 +49,13 @@
      </rect>
     </property>
     <property name="text">
-     <string>MHW 存档改签工具 v1.0
+     <string>MHW 存档改签工具 v1.1
 
 用于STEAM不同账号之间的存档替换
 
 by.坏鱼炒年糕
 
-2019.01.10</string>
+2019.01.11</string>
     </property>
     <property name="textFormat">
      <enum>Qt::AutoText</enum>

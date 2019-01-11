@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setWindowTitle(QString("MHW Save ID Changer v1.0"));
+    this->setWindowTitle(QString("MHW Save ID Changer v1.1"));
     this->setAutoFillBackground(true);//开启背景设置
     //this->setPalette(QPalette(QColor(255,255,255)));
     ui->label->setStyleSheet("background-color: rgb(255,255,255)");
@@ -226,22 +226,23 @@ void MainWindow::on_pushButton_clicked()
             return;
         }
 
-
-        fseek(fp2,40,SEEK_SET);
-        fread(text2,8,1,fp2);
-        ;
-        for(int i=0, idsame = 0; i<8; i++)
-        {
-            if(text[i]==text2[i])
+        if(ui->checkBox->isChecked()!=true){
+            fseek(fp2,40,SEEK_SET);
+            fread(text2,8,1,fp2);
+            ;
+            for(int i=0, idsame = 0; i<8; i++)
             {
-                idsame++;
-            }
-            if(idsame>=8)
-            {
-                QMessageBox mesg;
-                mesg.critical(this,"错误","选择的两个存档的ID相同！   ");
-                fclose(fp2);
-                return;
+                if(text[i]==text2[i])
+                {
+                    idsame++;
+                }
+                if(idsame>=8)
+                {
+                    QMessageBox mesg;
+                    mesg.critical(this,"错误","选择的两个存档的ID相同！   ");
+                    fclose(fp2);
+                    return;
+                }
             }
         }
 
