@@ -24,8 +24,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setWindowTitle(QString("MHW Save ID Changer v1.1"));
-    this->setAutoFillBackground(true);//开启背景设置
+    this->setWindowTitle(QString("MHW Save ID Changer v1.2"));
+    ui->label->setText("MHW 存档改签工具 v1.2\n\n"
+                       "用于STEAM不同账号之间的存档替换\n\n"
+                       "by.坏鱼炒年糕\n\n2019.01.22");
+    this->setAutoFillBackground(true); //开启背景设置
     //this->setPalette(QPalette(QColor(255,255,255)));
     ui->label->setStyleSheet("background-color: rgb(255,255,255)");
 

@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-RC_ICONS = ico.ico
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MHW_Save_ID_Changer
@@ -32,3 +32,5 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+RC_FILE += version.rc
