@@ -34,3 +34,7 @@ FORMS += \
         mainwindow.ui
 
 RC_FILE += version.rc
+
+TRANSLATIONS=en.ts
+
+DISTFILES +=
